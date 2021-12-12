@@ -1,13 +1,15 @@
 <template>
-  <div>login</div>
+  <n-button>naive-ui</n-button>
 </template>
 
 <script>
-export default {
-  name: 'Login'
-}
+  import { defineComponent } from 'vue'
+  import { NButton } from 'naive-ui'
+
+  export default defineComponent({
+    name: 'Login',
+    components: {
+      NButton
+    }
+  })
 </script>
-
-<style>
-
-</style>
