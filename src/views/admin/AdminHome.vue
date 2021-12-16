@@ -1,7 +1,9 @@
 <template>
-<n-message-provider>
-  <Login/>
-</n-message-provider>
+<div class="admin-home">
+  <n-message-provider>
+    <Login/>
+  </n-message-provider>
+</div>
 </template>
 <script>
 import { defineComponent } from "vue";
@@ -17,5 +19,9 @@ components: {
 });
 </script>
 <style>
-
+.admin-home {
+  padding: 8rem 0;
+  background-image: url('./../../assets/register_img.jpg');
+  background-size: cover;
+}
 </style>
