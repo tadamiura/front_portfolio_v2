@@ -1,22 +1,21 @@
 <template>
   <n-form 
     :label-width="80"
-    :model="formValue"
+    :model="formData"
     :rules="rules"
-    :size="size"
     ref="formRef"
   >
     <n-form-item path="email" label="Adresse email">
       <n-input
         type="email"
-        v-model:value="formValue.email"
+        v-model:value="formData.email"
         placeholder="Votre adresse email"
       />
      </n-form-item>
      <n-form-item path="password" label="Mot de passe">
       <n-input
         type="password"
-        v-model:value="formValue.password"
+        v-model:value="formData.password"
         show-password-on="mousedown"
         placeholder="Votre mot de passe"
       />
@@ -31,12 +30,12 @@
       </n-button>
      </n-form-item>
   </n-form>
-
 </template>
 
 <script>
   import { defineComponent , ref } from 'vue'
   import { NButton, NInput, NForm, NFormItem, useMessage } from 'naive-ui'
+  import axios from 'axios'
 
   export default defineComponent({
     name: 'Login',
@@ -46,16 +45,17 @@
       NForm,
       NFormItem
     },
+    
     setup() {
       const formRef = ref(null)
       const message = useMessage()
-
+      const formData = ref({
+        email: '',
+        password: ''
+      })
       return {
         formRef,
-        formValue: ref({
-          email: '',
-          password: ''
-        }),
+        formData,
         rules: {
           email: {
             required: true,
@@ -68,15 +68,24 @@
             trigger: 'blur'
           }
         },
-        handleValidateClick (e) {
+        handleValidateClick (e, data) {
         e.preventDefault()
         formRef.value.validate((errors) => {
           if (!errors) {
-            
-            message.success('Valid')
+            axios.post('http://localhost:3000/api/auth', formData.value)
+            .then(res => res.headers['x-access-token'])
+            .then( data => { 
+              localStorage.clear()
+              localStorage.setItem('x-access-token', data)
+              message.success('Connecté(e)')
+            })
+            .catch(err => {
+              localStorage.removeItem('user-token') // if the request fails, remove any possible user token if possible
+              message.error("Le nom de l'utilisateur ou le mot de passe est incorrect")
+            })
           } else {
             console.log(errors)
-            message.error('Le nom d’utilisateur ou le mot de passe ne correspondent pas. Réessayez.')
+            message.error('Les champs requis ne sont pas tous complétés')
           }
         })
       }

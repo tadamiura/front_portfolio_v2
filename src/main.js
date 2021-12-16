@@ -6,4 +6,5 @@ import './App.scss'
 import 'vfonts/Lato.css'
 import 'vfonts/FiraSans.css'
 
+
 createApp(App).use(store).use(router).mount('#app')
