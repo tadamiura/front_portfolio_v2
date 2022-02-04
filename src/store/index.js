@@ -29,6 +29,18 @@ export default createStore({
           context.commit("signError", err)
       }
     },
+    async trySignUp(context, credentials) {
+      try {
+        context.commit("updateIsLoading", true)
+        const response = await axios.post(
+          'http://localhost:3000/api/register', credentials
+        )
+        context.commit("signUpSuccess", response.data)
+      } catch (err) {
+        console.log('try sign up', err)
+        context.commit("signError", err)
+      }
+    }
   },
   mutations: {
     updateIsLoading(state, isLoading) {
